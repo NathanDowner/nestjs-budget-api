@@ -7,23 +7,29 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class PurchaseService {
-  constructor(@InjectRepository(Purchase) private repo: Repository<Purchase>) {}
-  
+  constructor(@InjectRepository(Purchase) private repo: Repository<Purchase>) { }
+
   create(createPurchaseDto: CreatePurchaseDto) {
     const purchase = this.repo.create(createPurchaseDto);
     return this.repo.save(purchase);
   }
 
-  findByExpenseId(id: number) {
-    return `This action returns all purchase`;
+  // findByExpenseId(id: number) {
+  //   return this.repo.find({ where: { expenseId: id } });
+  // }
+
+  async findOne(id: number) {
+    const purchase = await this.repo.findOneBy({ id });
+    if (!purchase) {
+      throw new Error('Purchase not found');
+    }
+    return purchase;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} purchase`;
-  }
-
-  update(id: number, updatePurchaseDto: UpdatePurchaseDto) {
-    return `This action updates a #${id} purchase`;
+  async update(id: number, updatePurchaseDto: UpdatePurchaseDto) {
+    const purchase = await this.findOne(id);
+    const updatedPurchase = this.repo.merge(purchase, updatePurchaseDto);
+    return this.repo.save(updatedPurchase);
   }
 
   remove(id: number) {
