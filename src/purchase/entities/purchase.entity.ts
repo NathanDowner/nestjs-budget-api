@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Expense } from "src/expense/entities/expense.entity";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('purchases')
 export class Purchase {
@@ -13,6 +14,13 @@ export class Purchase {
 
   @Column()
   date: Date;
+
+  @ManyToOne(
+    () => Expense,
+    expense => expense.purchases,
+    { eager: true, onDelete: 'CASCADE' }
+  )
+  expense: Expense;
 
   @CreateDateColumn()
   createdAt: Date;

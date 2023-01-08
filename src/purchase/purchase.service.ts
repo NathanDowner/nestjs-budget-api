@@ -14,9 +14,6 @@ export class PurchaseService {
     return this.repo.save(purchase);
   }
 
-  // findByExpenseId(id: number) {
-  //   return this.repo.find({ where: { expenseId: id } });
-  // }
 
   async findOne(id: number) {
     const purchase = await this.repo.findOneBy({ id });
@@ -32,7 +29,8 @@ export class PurchaseService {
     return this.repo.save(updatedPurchase);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} purchase`;
+  async remove(id: number) {
+    const purchase = await this.findOne(id);
+    return this.repo.remove(purchase);
   }
 }
