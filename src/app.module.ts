@@ -6,6 +6,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PurchaseModule } from './purchase/purchase.module';
 import { ExpenseModule } from './expense/expense.module';
 import { AuthModule } from './auth/auth.module';
+import { User } from './users/entities/user.entity';
+import { Expense } from './expense/entities/expense.entity';
+import { Purchase } from './purchase/entities/purchase.entity';
 
 @Module({
   imports: [
@@ -13,7 +16,7 @@ import { AuthModule } from './auth/auth.module';
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'db.sqlite',
-      entities: [__dirname + '/**/*.entity.ts'],
+      entities: [User, Expense, Purchase],
       synchronize: true,
     }),
     PurchaseModule,

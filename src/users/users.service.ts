@@ -10,11 +10,12 @@ export class UsersService {
   constructor(@InjectRepository(User) private repo: Repository<User>) { }
 
   create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+    const user = this.repo.create(createUserDto);
+    return this.repo.save(user);
   }
 
   findAll() {
-    return `This action returns all users`;
+    return this.repo.find();
   }
 
   findOne(id: number) {
