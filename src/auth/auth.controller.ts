@@ -2,8 +2,8 @@ import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
 import { LoginRequestDto } from "./dto/login-request.dto";
-import { AuthGuard } from "@nestjs/passport";
 import { Request as IncomingRequest } from "express";
+import { LocalAuthGuard } from "./guard/local-auth.guard";
 
 @ApiTags('authentication')
 @Controller()
@@ -13,8 +13,8 @@ export class AuthController {
   @Post('/login')
   @ApiOkResponse()
   @ApiBadRequestResponse()
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   login(@Request() req: IncomingRequest) {
-    return req.user;
+    return this.authService.login(req.user);
   }
 }
