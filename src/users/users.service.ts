@@ -18,8 +18,12 @@ export class UsersService {
     return this.repo.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findById(id: number) {
+    const user = await this.repo.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException('User not found')
+    }
+    return user;
   }
 
   async findByEmail(email: string) {
