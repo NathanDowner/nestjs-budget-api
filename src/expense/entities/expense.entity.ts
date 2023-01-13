@@ -1,5 +1,6 @@
 import { Purchase } from "src/purchase/entities/purchase.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { User } from "src/users/entities/user.entity";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('expenses')
 export class Expense {
@@ -17,6 +18,9 @@ export class Expense {
 
   @OneToMany(() => Purchase, purchase => purchase.expense)
   purchases: Purchase[];
+
+  @ManyToOne(() => User, user => user.expenses)
+  user: User;
 
   @UpdateDateColumn()
   updatedAt: Date;
