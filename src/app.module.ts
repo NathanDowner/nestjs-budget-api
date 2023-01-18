@@ -9,6 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { User } from './users/entities/user.entity';
 import { Expense } from './expense/entities/expense.entity';
 import { Purchase } from './purchase/entities/purchase.entity';
+import { BudgetsModule } from './budgets/budgets.module';
+import { Budget } from './budgets/entities/budget.entity';
 
 @Module({
   imports: [
@@ -16,12 +18,13 @@ import { Purchase } from './purchase/entities/purchase.entity';
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'db.sqlite',
-      entities: [User, Expense, Purchase],
+      entities: [User, Budget, Expense, Purchase],
       synchronize: true,
     }),
     PurchaseModule,
     ExpenseModule,
     AuthModule,
+    BudgetsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
