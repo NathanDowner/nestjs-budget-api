@@ -14,7 +14,6 @@ export class PurchaseService {
     return this.repo.save(purchase);
   }
 
-
   async findOne(id: number) {
     const purchase = await this.repo.findOneBy({ id });
     if (!purchase) {

@@ -34,11 +34,19 @@ export class UsersService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.findById(id);
+    const updatedUser = this.repo.merge(user, updateUserDto);
+    return this.repo.save(updatedUser);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    const user = await this.findById(id);
+    return this.repo.remove(user);
+  }
+
+  async getUserBudgets(id: number) {
+    const user = await this.findById(id);
+    return user.budgets;
   }
 }
