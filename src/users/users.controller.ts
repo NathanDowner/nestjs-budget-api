@@ -1,13 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Request, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  ParseIntPipe,
+  Request,
+  Put,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dto/user.dto';
-import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { BudgetDto } from 'src/budgets';
 import { CreateBudgetDto } from 'src/budgets/dto/create-budget.dto';
 import { BudgetsService } from 'src/budgets/budgets.service';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { User } from './entities/user.entity';
 
 @ApiTags('users')
 @Controller('users')
@@ -15,7 +32,7 @@ import { BudgetsService } from 'src/budgets/budgets.service';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly budgetsService: BudgetsService
+    private readonly budgetsService: BudgetsService,
   ) { }
 
   @Post()
@@ -43,7 +60,10 @@ export class UsersController {
 
   @Put(':id')
   @ApiOkResponse({ type: UserDto })
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     return this.usersService.update(id, updateUserDto);
   }
 
@@ -64,8 +84,11 @@ export class UsersController {
   @Post(':id/budgets')
   @Serialize(BudgetDto)
   @ApiCreatedResponse({ type: BudgetDto })
-  async createUserBudget(@Param('id', ParseIntPipe) id: number, @Body() createBudgetDto: CreateBudgetDto) {
-    const user = await this.usersService.findById(id);
+  async createUserBudget(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: User,
+    @Body() createBudgetDto: CreateBudgetDto,
+  ) {
     return this.budgetsService.create(createBudgetDto, user);
   }
 }
