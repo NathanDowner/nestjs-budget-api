@@ -6,8 +6,8 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  Request,
   Put,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -41,11 +41,6 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @Get('test')
-  test(@Request() req: any) {
-    return req.user;
-  }
-
   @Get()
   @ApiOkResponse({ type: [UserDto] })
   findAll() {
@@ -75,14 +70,19 @@ export class UsersController {
   }
 
   @Get(':id/budgets')
-  @Serialize(BudgetDto)
+  @ApiTags('budgets')
+  // @Serialize(BudgetDto)
   @ApiOkResponse({ type: [BudgetDto] })
-  getUserBudgets(@Param('id', ParseIntPipe) id: number) {
+  getUserBudgets(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: User) {
+    if (id !== user.id) {
+      throw new UnauthorizedException()
+    }
     return this.usersService.getUserBudgets(id);
   }
 
   @Post(':id/budgets')
-  @Serialize(BudgetDto)
+  @ApiTags('budgets')
+  // @Serialize(BudgetDto)
   @ApiCreatedResponse({ type: BudgetDto })
   async createUserBudget(
     @Param('id', ParseIntPipe) id: number,

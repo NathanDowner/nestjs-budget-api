@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Budget } from './entities/budget.entity';
 import { Repository } from 'typeorm';
@@ -13,5 +13,18 @@ export class BudgetsService {
     const budget = this.repo.create(createBudgetDto);
     budget.user = user;
     return this.repo.save(budget);
+  }
+
+  async findById(id: number) {
+    const budget = await this.repo.findOne({ where: { id } });
+    if (!budget) {
+      throw new NotFoundException('Budget not found');
+    }
+    return budget;
+  }
+
+  async update(budget: Budget, updateBudgetDto: CreateBudgetDto) {
+    const updatedBudget = this.repo.merge(budget, updateBudgetDto);
+    return this.repo.save(updatedBudget);
   }
 }
