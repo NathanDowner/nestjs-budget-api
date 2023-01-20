@@ -7,7 +7,7 @@ import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class BudgetsService {
-  constructor(@InjectRepository(Budget) private repo: Repository<Budget>) { }
+  constructor(@InjectRepository(Budget) private repo: Repository<Budget>) {}
 
   create(createBudgetDto: CreateBudgetDto, user: User) {
     const budget = this.repo.create(createBudgetDto);
@@ -26,5 +26,9 @@ export class BudgetsService {
   async update(budget: Budget, updateBudgetDto: CreateBudgetDto) {
     const updatedBudget = this.repo.merge(budget, updateBudgetDto);
     return this.repo.save(updatedBudget);
+  }
+
+  async remove(budget: Budget) {
+    return this.repo.remove(budget);
   }
 }

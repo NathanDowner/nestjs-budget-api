@@ -4,13 +4,15 @@ import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Expense } from './entities/expense.entity';
 import { Repository } from 'typeorm';
+import { Budget } from 'src/budgets/entities/budget.entity';
 
 @Injectable()
 export class ExpenseService {
-  constructor(@InjectRepository(Expense) private repo: Repository<Expense>) { }
+  constructor(@InjectRepository(Expense) private repo: Repository<Expense>) {}
 
-  create(createExpenseDto: CreateExpenseDto) {
+  create(createExpenseDto: CreateExpenseDto, budget: Budget) {
     const expense = this.repo.create(createExpenseDto);
+    expense.budget = budget;
     return this.repo.save(expense);
   }
 

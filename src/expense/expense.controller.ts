@@ -1,8 +1,15 @@
-import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Param,
+  Delete,
+  ParseIntPipe,
+  Put,
+} from '@nestjs/common';
 import { ExpenseService } from './expense.service';
-import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
-import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { ExpenseDto } from './dto/expense.dto';
 import { PurchaseDto } from 'src/purchase/dto/purchase.dto';
@@ -10,14 +17,7 @@ import { PurchaseDto } from 'src/purchase/dto/purchase.dto';
 @ApiTags('expenses')
 @Controller('expenses')
 export class ExpenseController {
-  constructor(private readonly expenseService: ExpenseService) { }
-
-  @Post()
-  @ApiCreatedResponse({ type: ExpenseDto })
-  @Serialize(ExpenseDto)
-  create(@Body() createExpenseDto: CreateExpenseDto) {
-    return this.expenseService.create(createExpenseDto);
-  }
+  constructor(private readonly expenseService: ExpenseService) {}
 
   @Get(':id')
   @ApiOkResponse({ type: ExpenseDto })
@@ -29,7 +29,10 @@ export class ExpenseController {
   @Put(':id')
   @ApiOkResponse({ type: ExpenseDto })
   @Serialize(ExpenseDto)
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateExpenseDto: UpdateExpenseDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateExpenseDto: UpdateExpenseDto,
+  ) {
     return this.expenseService.update(id, updateExpenseDto);
   }
 

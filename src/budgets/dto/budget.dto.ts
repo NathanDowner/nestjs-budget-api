@@ -1,7 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Expose, Transform, plainToClass } from "class-transformer";
-import { ExpenseDto } from "src/expense";
-
+import { ApiProperty } from '@nestjs/swagger';
+import { Expose, Transform, plainToClass } from 'class-transformer';
+import { ExpenseDto } from 'src/expense';
 
 export class BudgetDto {
   @ApiProperty()
@@ -17,7 +16,13 @@ export class BudgetDto {
   income: number;
 
   @ApiProperty()
-  @Transform(({ obj }) => plainToClass(ExpenseDto, obj.expenses, { excludeExtraneousValues: true }))
+  @Expose()
+  userId: number;
+
+  @ApiProperty()
+  @Transform(({ obj }) =>
+    plainToClass(ExpenseDto, obj.expenses, { excludeExtraneousValues: true }),
+  )
   @Expose()
   expenses: ExpenseDto[];
 

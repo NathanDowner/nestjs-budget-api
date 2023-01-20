@@ -1,7 +1,16 @@
-import { Budget } from "src/budgets/entities/budget.entity";
-import { Purchase } from "src/purchase/entities/purchase.entity";
-import { User } from "src/users/entities/user.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Budget } from 'src/budgets/entities/budget.entity';
+import { Purchase } from 'src/purchase/entities/purchase.entity';
+import { User } from 'src/users/entities/user.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('expenses')
 export class Expense {
@@ -17,11 +26,13 @@ export class Expense {
   @CreateDateColumn()
   date: Date;
 
-  @OneToMany(() => Purchase, purchase => purchase.expense)
+  @Column()
+  budgetId: number;
+
+  @OneToMany(() => Purchase, (purchase) => purchase.expense)
   purchases: Purchase[];
 
-
-  @ManyToOne(() => Budget, budget => budget.expenses)
+  @ManyToOne(() => Budget, (budget) => budget.expenses)
   budget: Budget;
 
   @UpdateDateColumn()
