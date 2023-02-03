@@ -6,21 +6,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PurchaseModule } from './purchase/purchase.module';
 import { ExpenseModule } from './expense/expense.module';
 import { AuthModule } from './auth/auth.module';
-import { User } from './users/entities/user.entity';
-import { Expense } from './expense/entities/expense.entity';
-import { Purchase } from './purchase/entities/purchase.entity';
 import { BudgetsModule } from './budgets/budgets.module';
-import { Budget } from './budgets/entities/budget.entity';
+import { typeOrmConfig } from './config/typeorm.config';
 
 @Module({
   imports: [
     UsersModule,
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'db.sqlite',
-      entities: [User, Budget, Expense, Purchase],
-      synchronize: true,
-    }),
+    TypeOrmModule.forRoot(typeOrmConfig),
     PurchaseModule,
     ExpenseModule,
     AuthModule,
@@ -29,4 +21,4 @@ import { Budget } from './budgets/entities/budget.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
