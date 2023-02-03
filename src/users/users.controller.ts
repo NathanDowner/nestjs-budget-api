@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Put,
   UnauthorizedException,
+  HttpCode,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,9 +16,11 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dto/user.dto';
 import {
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOkResponse,
+  ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
 import { BudgetDto } from 'src/budgets';
@@ -33,27 +36,31 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly budgetsService: BudgetsService,
-  ) { }
+  ) {}
 
   @Post()
+  @ApiBearerAuth()
   @ApiCreatedResponse({ type: UserDto })
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
+  @ApiBearerAuth()
   @ApiOkResponse({ type: [UserDto] })
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
+  @ApiBearerAuth()
   @ApiOkResponse({ type: UserDto })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.findById(id);
   }
 
   @Put(':id')
+  @ApiBearerAuth()
   @ApiOkResponse({ type: UserDto })
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -63,7 +70,9 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @ApiNoContentResponse()
+  @HttpCode(204)
   async remove(@Param('id', ParseIntPipe) id: number) {
     await this.usersService.remove(id);
     return;
@@ -72,10 +81,14 @@ export class UsersController {
   @Get(':id/budgets')
   @ApiTags('budgets')
   // @Serialize(BudgetDto)
+  @ApiBearerAuth()
   @ApiOkResponse({ type: [BudgetDto] })
-  getUserBudgets(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: User) {
+  getUserBudgets(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: User,
+  ) {
     if (id !== user.id) {
-      throw new UnauthorizedException()
+      throw new UnauthorizedException();
     }
     return this.usersService.getUserBudgets(id);
   }
@@ -83,6 +96,7 @@ export class UsersController {
   @Post(':id/budgets')
   @ApiTags('budgets')
   // @Serialize(BudgetDto)
+  @ApiBearerAuth()
   @ApiCreatedResponse({ type: BudgetDto })
   async createUserBudget(
     @Param('id', ParseIntPipe) id: number,
