@@ -1,6 +1,5 @@
 import { Budget } from 'src/budgets/entities/budget.entity';
 import { Purchase } from 'src/purchase/entities/purchase.entity';
-import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -29,7 +28,7 @@ export class Expense {
   @Column()
   budgetId: number;
 
-  @OneToMany(() => Purchase, (purchase) => purchase.expense)
+  @OneToMany(() => Purchase, (purchase) => purchase.expense, { eager: true })
   purchases: Purchase[];
 
   @ManyToOne(() => Budget, (budget) => budget.expenses)

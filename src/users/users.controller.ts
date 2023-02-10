@@ -20,7 +20,6 @@ import {
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOkResponse,
-  ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
 import { BudgetDto } from 'src/budgets';
@@ -30,8 +29,8 @@ import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from './entities/user.entity';
 
 @ApiTags('users')
+@ApiBearerAuth()
 @Controller('users')
-// @Serialize(UserDto)
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
@@ -39,28 +38,26 @@ export class UsersController {
   ) {}
 
   @Post()
-  @ApiBearerAuth()
   @ApiCreatedResponse({ type: UserDto })
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
-  @ApiBearerAuth()
+  @Serialize(UserDto)
   @ApiOkResponse({ type: [UserDto] })
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  @ApiBearerAuth()
+  @Serialize(UserDto)
   @ApiOkResponse({ type: UserDto })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.findById(id);
   }
 
   @Put(':id')
-  @ApiBearerAuth()
   @ApiOkResponse({ type: UserDto })
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -70,7 +67,6 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @ApiBearerAuth()
   @ApiNoContentResponse()
   @HttpCode(204)
   async remove(@Param('id', ParseIntPipe) id: number) {
@@ -80,8 +76,7 @@ export class UsersController {
 
   @Get(':id/budgets')
   @ApiTags('budgets')
-  // @Serialize(BudgetDto)
-  @ApiBearerAuth()
+  @Serialize(BudgetDto)
   @ApiOkResponse({ type: [BudgetDto] })
   getUserBudgets(
     @Param('id', ParseIntPipe) id: number,
@@ -95,8 +90,7 @@ export class UsersController {
 
   @Post(':id/budgets')
   @ApiTags('budgets')
-  // @Serialize(BudgetDto)
-  @ApiBearerAuth()
+  @Serialize(BudgetDto)
   @ApiCreatedResponse({ type: BudgetDto })
   async createUserBudget(
     @Param('id', ParseIntPipe) id: number,

@@ -3,30 +3,30 @@ import { Expose, Transform, plainToClass } from 'class-transformer';
 import { ExpenseDto } from 'src/expense';
 
 export class BudgetDto {
-  @ApiProperty()
   @Expose()
+  @ApiProperty()
   id: number;
 
-  @ApiProperty()
   @Expose()
+  @ApiProperty()
   name: string;
 
-  @ApiProperty()
   @Expose()
+  @ApiProperty()
   income: number;
 
-  @ApiProperty()
   @Expose()
+  @ApiProperty()
   userId: number;
 
+  @Expose()
   @ApiProperty()
   @Transform(({ obj }) =>
     plainToClass(ExpenseDto, obj.expenses, { excludeExtraneousValues: true }),
   )
-  @Expose()
   expenses: ExpenseDto[];
 
-  @ApiProperty()
   @Expose()
+  @ApiProperty()
   date: Date;
 }

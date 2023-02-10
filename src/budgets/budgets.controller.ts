@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { BudgetsService } from './budgets.service';
 import {
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOkResponse,
@@ -23,8 +24,10 @@ import { BudgetDto } from './dto/budget.dto';
 import { ExpenseDto } from 'src/expense';
 import { ExpenseService } from 'src/expense/expense.service';
 import { CreateExpenseDto } from 'src/expense/dto/create-expense.dto';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
 
 @ApiTags('budgets')
+@ApiBearerAuth()
 @Controller('budgets')
 export class BudgetsController {
   constructor(
@@ -34,6 +37,7 @@ export class BudgetsController {
 
   @Get('/:id')
   @ApiOkResponse({ type: BudgetDto })
+  @Serialize(BudgetDto)
   async getBudget(
     @Param('id', ParseIntPipe) id: number,
     @CurrentUser() user: User,
@@ -48,6 +52,7 @@ export class BudgetsController {
 
   @Put('/:id')
   @ApiOkResponse({ type: BudgetDto })
+  @Serialize(BudgetDto)
   async updateBudget(
     @Param('id', ParseIntPipe) id: number,
     @CurrentUser() user: User,

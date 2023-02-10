@@ -30,6 +30,6 @@ export class Budget extends BaseEntity {
   @OneToMany(() => Expense, (expense) => expense.budget, { eager: true })
   expenses: Expense[];
 
-  @ManyToOne(() => User, (user) => user.budgets)
+  @ManyToOne(() => User, (user) => user.budgets, { eager: false })
   user: User;
 }

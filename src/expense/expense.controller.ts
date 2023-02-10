@@ -24,6 +24,7 @@ import { CreatePurchaseDto } from 'src/purchase/dto/create-purchase.dto';
 import { PurchaseService } from 'src/purchase/purchase.service';
 
 @ApiTags('expenses')
+@ApiBearerAuth()
 @Controller('expenses')
 export class ExpenseController {
   constructor(
@@ -33,7 +34,6 @@ export class ExpenseController {
 
   @Get(':id')
   @ApiOkResponse({ type: ExpenseDto })
-  @ApiBearerAuth()
   @Serialize(ExpenseDto)
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.expenseService.findOne(id);
@@ -41,7 +41,6 @@ export class ExpenseController {
 
   @Put(':id')
   @ApiOkResponse({ type: ExpenseDto })
-  @ApiBearerAuth()
   @Serialize(ExpenseDto)
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -50,25 +49,23 @@ export class ExpenseController {
     return this.expenseService.update(id, updateExpenseDto);
   }
 
-  @Get(':id/purchases')
-  @ApiOkResponse({ type: [ExpenseDto] })
-  @ApiBearerAuth()
-  @Serialize(PurchaseDto)
-  findPurchases(@Param('id', ParseIntPipe) id: number) {
-    return this.expenseService.findPurchases(id);
-  }
-
   @Delete(':id')
   @ApiNoContentResponse()
-  @ApiBearerAuth()
   remove(@Param('id', ParseIntPipe) id: number) {
     this.expenseService.remove(id);
     return;
   }
 
+  @Get(':id/purchases')
+  @ApiTags('purchases')
+  @ApiOkResponse({ type: [PurchaseDto] })
+  @Serialize(PurchaseDto)
+  findPurchases(@Param('id', ParseIntPipe) id: number) {
+    return this.expenseService.findPurchases(id);
+  }
+
   @Post(':id/purchases')
   @ApiTags('purchases')
-  @ApiBearerAuth()
   @ApiCreatedResponse({ type: PurchaseDto })
   @Serialize(PurchaseDto)
   async createPurchase(
